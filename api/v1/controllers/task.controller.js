@@ -1,5 +1,6 @@
 import Task from "../models/task.model.js";
 import paginationHelper from "../../../helpers/pagination.helper.js";
+import searchHelper from "../../../helpers/search.helper.js";
 
 // [GET] /api/v1/tasks
 export const index = async (req, res) => {
@@ -10,7 +11,12 @@ export const index = async (req, res) => {
 
   const pagination = {
     page: 1,
-    limit: 2
+    limit: 9
+  }
+
+  const search = searchHelper(req.query);
+  if (req.query.keyword) {
+    find.title = search.regex;
   }
 
   const count = await Task.countDocuments(find);
