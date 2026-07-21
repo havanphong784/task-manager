@@ -88,4 +88,30 @@ export const create = async (req, res) => {
   }
 }
 
+// [PATCH] /api/v1/tasks/edit/:idTask
+export const edit = async (req, res) => {
+  try {
+    const id = req.params.idTask;
+    await Task.updateOne({_id: id}, req.body);
+    res.json({
+      code: 200,
+      message: "Cập nhật thành công!"
+    });
+  } catch (e) {
+    res.json({code: 400, message: "Lỗi!"});
+  }
+}
 
+// [PATCH] /api/v1/tasks/delete/:idTask
+export const remove = async (req, res) => {
+  try {
+    const id = req.params.idTask;
+    await Task.updateOne({_id: id}, {deleted: true, deletedAt: new Date()});
+    res.json({
+      code: 200,
+      message: "Xóa thành công!"
+    });
+  } catch (e) {
+    res.json({code: 400, message: "Lỗi!"});
+  }
+}
