@@ -47,12 +47,30 @@ export const detail = async (req, res) => {
 // [PATCH] /api/v1/tasks/change-status/:idTask
 export const changeStatus = async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = req.params.idTask;
     const status = req.body.status;
     await Task.updateOne({_id: id}, {status: status});
     res.json({code: 200, message: "Cập nhật trạng thái thành công"});
   } catch {
     res.json({code: 400, message: "Lỗi"});
+  }
+}
+
+// [PATCH] /api/v1/tasks/change-multi
+export const changeMulti = async (req, res) => {
+  try {
+    const {ids, key, value} = req.body;
+    switch (key) {
+      case "status":
+        await Task.updateMany({_id: {$in: ids}}, {status: value});
+        res.json({code: 200, message: "Cập nhật trạng thái thành công"});
+        break
+    }
+  } catch (e) {
+    res.json({
+      code: 400,
+      message: "Không tồn tại"
+    })
   }
 }
 
