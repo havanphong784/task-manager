@@ -20,7 +20,7 @@ export const index = async (req, res) => {
   }
 
   const count = await Task.countDocuments(find);
-  const paginationObject = paginationHelper(pagination,req.query,count);
+  const paginationObject = paginationHelper(pagination, req.query, count);
 
   const sort = {};
   if (req.query.sortKey && req.query.sortValue) {
@@ -43,3 +43,17 @@ export const detail = async (req, res) => {
     res.status(404).send("Not Found");
   }
 };
+
+// [PATCH] /api/v1/tasks/change-status/:idTask
+export const changeStatus = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const status = req.body.status;
+    await Task.updateOne({_id: id}, {status: status});
+    res.json({code: 200, message: "Cập nhật trạng thái thành công"});
+  } catch {
+    res.json({code: 400, message: "Lỗi"});
+  }
+}
+
+
