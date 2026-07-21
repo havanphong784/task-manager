@@ -74,4 +74,18 @@ export const changeMulti = async (req, res) => {
   }
 }
 
+// [POST] /api/v1/tasks/create
+export const create = async (req, res) => {
+  try {
+    const task = new Task(req.body);
+    await task.save();
+    res.json({
+      code: 200,
+      message: "Tạo thành công!",
+    });
+  } catch (e) {
+    res.json({code: 400, message: "Lỗi!"});
+  }
+}
+
 
