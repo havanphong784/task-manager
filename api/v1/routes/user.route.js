@@ -1,6 +1,7 @@
 import express from "express";
 import * as controller from "../controllers/user.controller.js";
 import * as validate from "../validates/user.validate.js";
+import * as authMiddleware from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
@@ -9,6 +10,6 @@ router.post("/login", validate.login, controller.login);
 router.post("/password/forgot", controller.forgotPassword);
 router.post("/password/otp", controller.otpPassword);
 router.post("/password/reset", controller.resetPassword);
-router.get("/detail", controller.detail);
+router.get("/detail", authMiddleware.requireAuth, controller.detail);
 
 export default router;

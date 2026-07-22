@@ -87,7 +87,5 @@ export const resetPassword = async (req, res) => {
 }
 
 export const detail = async (req, res) => {
-  const token = req.cookies.token;
-  const user = await User.findOne({token: token, deleted: false}).select("-token -password");
-  res.json({code: 200, message: "Thành công", info: user})
+  res.json({code: 200, message: "Thành công", info: req.user})
 }
