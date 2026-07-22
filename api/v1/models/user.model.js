@@ -4,6 +4,7 @@ import crypto from "crypto";
 const userSchema = new mongoose.Schema({
   fullName: String,
   email: String,
+  password: String,
   token: {
     type: String,
     default: () => crypto.randomUUID()
