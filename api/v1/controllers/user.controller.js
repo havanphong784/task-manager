@@ -12,9 +12,7 @@ export const register = async (req, res) => {
 
   const password = await bcrypt.hash(req.body.password, 12);
   const user = new User({
-    fullName: req.body.fullName,
-    email: req.body.email,
-    password: password,
+    fullName: req.body.fullName, email: req.body.email, password: password,
   });
   await user.save();
 
@@ -56,13 +54,13 @@ export const forgotPassword = async (req, res) => {
 }
 
 export const otpPassword = async (req, res) => {
-  const { email, otp } = req.body;
-  
+  const {email, otp} = req.body;
+
   const check = await ForgotPassword.findOne({email: email, otp: otp});
   if (!check) {
     return res.json({code: 400, message: "OTP không hợp lệ"});
   }
-  
+
   const user = await User.findOne({email: email});
   res.cookie("token", user.token);
   res.json({code: 200, message: "Xác thực thành công", token: user.token});
@@ -71,7 +69,7 @@ export const otpPassword = async (req, res) => {
 export const resetPassword = async (req, res) => {
   const token = req.cookies.token || req.body.token;
   const password = req.body.password;
-  
+
   if (!token) {
     return res.json({code: 400, message: "Không tìm thấy token xác thực"});
   }
@@ -80,13 +78,16 @@ export const resetPassword = async (req, res) => {
   if (!user) {
     return res.json({code: 400, message: "Người dùng không tồn tại"});
   }
-  
+
   const hashPassword = await bcrypt.hash(password, 12);
-  
-  await User.updateOne(
-    { token: token },
-    { password: hashPassword }
-  );
-  
+
+  await User.updateOne({token: token}, {password: hashPassword});
+
   res.json({code: 200, message: "Đổi mật khẩu thành công"});
+}
+
+export const detail = async (req, res) => {
+  const token = req.cookies.token;
+  const user = await User.findOne({token: token, deleted: false}).select("-token -password");
+  res.json({code: 200, message: "Thành công", info: user})
 }
