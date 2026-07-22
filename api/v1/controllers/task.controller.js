@@ -4,7 +4,13 @@ import searchHelper from "../../../helpers/search.helper.js";
 
 // [GET] /api/v1/tasks
 export const index = async (req, res) => {
-  const find = {deleted: false};
+  const find = {
+    deleted: false,
+    $or: [
+      {createdBy: req.user.id},
+      {listUser: req.user.id}
+    ],
+  };
   if (req.query.status) {
     find.status = req.query.status;
   }
@@ -77,6 +83,7 @@ export const changeMulti = async (req, res) => {
 // [POST] /api/v1/tasks/create
 export const create = async (req, res) => {
   try {
+    req.body.createdBy = req.user.id;
     const task = new Task(req.body);
     await task.save();
     res.json({

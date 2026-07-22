@@ -89,3 +89,8 @@ export const resetPassword = async (req, res) => {
 export const detail = async (req, res) => {
   res.json({code: 200, message: "Thành công", info: req.user})
 }
+
+export const list = async (req, res) => {
+  const users = await User.find({deleted: false}).select("fullName email");
+  res.json({code: 200, message: "Lấy thông tin users thành công", users: users});
+}
